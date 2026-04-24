@@ -1,0 +1,14 @@
+==53894== Memcheck, a memory error detector
+==53894== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==53894== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==53894== Command: ./bin/execute_script script04
+==53894== 
+1 1 41058
+==53894== 
+==53894== HEAP SUMMARY:
+==53894==     in use at exit: 0 bytes in 0 blocks
+==53894==   total heap usage: 11 allocs, 11 frees, 8,965 bytes allocated
+==53894== 
+==53894== All heap blocks were freed -- no leaks are possible
+==53894== 
+==53894== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

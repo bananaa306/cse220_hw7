@@ -1,0 +1,13 @@
+==54183== Memcheck, a memory error detector
+==54183== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==54183== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==54183== Command: ./bin/trans02
+==54183== 
+==54183== 
+==54183== HEAP SUMMARY:
+==54183==     in use at exit: 0 bytes in 0 blocks
+==54183==   total heap usage: 2 allocs, 2 frees, 168 bytes allocated
+==54183== 
+==54183== All heap blocks were freed -- no leaks are possible
+==54183== 
+==54183== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
