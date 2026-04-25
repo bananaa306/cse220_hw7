@@ -2,7 +2,6 @@
 #include "hw7.h"
 
 
-
 static matrix_sf *mk(unsigned int rows, unsigned int cols, int values[]) {
     matrix_sf *m = copy_matrix(rows, cols, values);
     cr_assert_not_null(m);
@@ -37,7 +36,7 @@ static void remove_temp_script(char *path) {
     free(path);
 }
 
-/* add_mats_sf: 10 cases */
+/* add_mats_sf: */
 Test(student_operator_return, add_edge01, .description="add_mats_sf handles NULL left input") {
     matrix_sf *b = mk_scalar('B', 2);
     cr_expect_null(add_mats_sf(NULL, b));
@@ -135,7 +134,7 @@ Test(student_operator_return, add_edge10, .description="add_mats_sf handles zero
     free(c);
 }
 
-/* mult_mats_sf: 10 cases */
+/* mult_mats_sf: */
 Test(student_operator_return, mult_edge01, .description="mult_mats_sf handles NULL left input") {
     matrix_sf *b = mk_scalar('B', 2);
     cr_expect_null(mult_mats_sf(NULL, b));
@@ -232,7 +231,7 @@ Test(student_operator_return, mult_edge10, .description="mult_mats_sf handles ze
     free(c);
 }
 
-/* transpose_mat_sf: 10 cases */
+/* transpose_mat_sf: */
 Test(student_operator_return, trans_edge01, .description="transpose_mat_sf handles NULL input") {
     cr_expect_null(transpose_mat_sf(NULL));
 }
@@ -316,7 +315,7 @@ Test(student_operator_return, trans_edge10, .description="transpose_mat_sf handl
     free(t);
 }
 
-/* insert_bst_sf: 10 cases */
+/* insert_bst_sf:  */
 Test(student_insert_bst, insert_edge01, .description="insert_bst_sf inserts into empty tree") {
     matrix_sf *a = mk_scalar('A', 1);
     bst_sf *root = insert_bst_sf(a, NULL);
@@ -402,7 +401,7 @@ Test(student_insert_bst, insert_edge10, .description="insert_bst_sf supports mix
     free_bst_sf(root);
 }
 
-/* find_bst_sf: 10 cases */
+/* find_bst_sf:  */
 Test(student_find_bst, find_edge01, .description="find_bst_sf returns NULL for NULL root") {
     cr_expect_null(find_bst_sf('A', NULL));
 }
@@ -479,7 +478,7 @@ Test(student_find_bst, find_edge10, .description="find_bst_sf returns original o
     free_bst_sf(root);
 }
 
-/* free_bst_sf: 10 cases */
+/* free_bst_sf: */
 Test(student_free_bst, free_edge01, .description="free_bst_sf handles NULL tree") {
     free_bst_sf(NULL);
     cr_expect(1);
@@ -566,7 +565,7 @@ Test(student_free_bst, free_edge10, .description="free_bst_sf frees tree with mi
     cr_expect(1);
 }
 
-/* create_matrix_sf: 10 cases */
+/* create_matrix_sf: */
 Test(student_create_matrix, create_edge01, .description="create_matrix_sf handles NULL expr") {
     cr_expect_null(create_matrix_sf('A', NULL));
 }
@@ -617,7 +616,7 @@ Test(student_create_matrix, create_edge10, .description="create_matrix_sf tolera
     free(m);
 }
 
-/* infix2postfix_sf: 10 cases */
+/* infix2postfix_sf: */
 Test(student_infix2postfix, post_edge01, .description="infix2postfix_sf handles NULL input") {
     cr_expect_null(infix2postfix_sf(NULL));
 }
@@ -685,7 +684,7 @@ Test(student_infix2postfix, post_edge10, .description="infix2postfix_sf handles 
     free(p);
 }
 
-/* evaluate_expr_sf: 10 cases */
+/* evaluate_expr_sf: */
 Test(student_evaluate_expr, eval_edge01, .description="evaluate_expr_sf returns NULL for NULL expr") {
     bst_sf *root = insert_bst_sf(mk_scalar('A', 1), NULL);
     cr_expect_null(evaluate_expr_sf('R', NULL, root));
@@ -784,7 +783,7 @@ Test(student_evaluate_expr, eval_edge10, .description="evaluate_expr_sf ignores 
     free_bst_sf(root);
 }
 
-/* execute_script_sf: 10 cases */
+/* execute_script_sf: */
 Test(student_execute_script, exec_edge01, .description="execute_script_sf returns NULL for NULL filename") {
     cr_expect_null(execute_script_sf(NULL));
 }
