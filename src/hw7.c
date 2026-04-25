@@ -426,7 +426,7 @@ matrix_sf *execute_script_sf(char *filename) {
     matrix_sf *last_matrix = NULL;
 
     char *line = NULL;
-    size_t line_size = 0;
+    size_t line_size = MAX_LINE_LEN;
     //line check
     while (getline(&line, &line_size, file) != -1) {
         //remove newline
