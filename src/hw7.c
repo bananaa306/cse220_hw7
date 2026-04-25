@@ -2,6 +2,7 @@
 
 bst_sf* insert_bst_sf(matrix_sf *mat, bst_sf *root) {
 
+    //insert
     if(root == NULL)
     {
         bst_sf *new_node = malloc(sizeof(bst_sf));
@@ -10,6 +11,7 @@ bst_sf* insert_bst_sf(matrix_sf *mat, bst_sf *root) {
         new_node->right_child = NULL;
         return new_node;
     }    
+    //recursive find next available
     if (mat->name < root->mat->name) {
     root->left_child = insert_bst_sf(mat, root->left_child);
     }
@@ -21,26 +23,33 @@ bst_sf* insert_bst_sf(matrix_sf *mat, bst_sf *root) {
 }
 
 matrix_sf* find_bst_sf(char name, bst_sf *root) {
+
+    //null check
     if(root == NULL)
     {
         return NULL;
     }
+    //pointer of tree
     bst_sf *p = root;
     while(p && p->mat->name != name)
     {
+        //move left if less than
         if(name < p->mat->name)
         {
             p = p->left_child;
+            //move right if greater
         }else{
             p = p->right_child;
         }
     }
+    //if p is null return null
     return p ? p->mat : NULL;
 }
 
 void free_bst_sf(bst_sf *root) {
+    //null check
     if (root == NULL) return;
-
+    //recursive from leaves to root
     free_bst_sf(root->left_child);
     free_bst_sf(root->right_child);
 
@@ -50,36 +59,44 @@ void free_bst_sf(bst_sf *root) {
 }
 //helper
 void free_bst_except(bst_sf *root, char preserve_name) {
+    //null check
     if (root == NULL) return;
     
     free_bst_except(root->left_child, preserve_name);
     free_bst_except(root->right_child, preserve_name);
     
-    // Only free the matrix if it's not the one we want to preserve
+    // do not free if we want to keep that matrix
     if (root->mat != NULL && root->mat->name != preserve_name) {
         free(root->mat);
     }
-    
+    //free entire tree after
     free(root);
 }
 matrix_sf* add_mats_sf(const matrix_sf *mat1, const matrix_sf *mat2) {
+
+    //null checks
     if(mat1 == NULL || mat2 == NULL)
     {
         return NULL;
     }
+    //unallowed dimensions
     if(mat1->num_rows != mat2->num_rows || mat1->num_cols != mat2->num_cols)
     {
         return NULL;
     }
+    //allocate memory
     size_t count = (size_t)mat1->num_rows * mat1->num_cols;
     matrix_sf *ans = malloc(sizeof(matrix_sf)+ count * (sizeof(int)));
     if(ans == NULL)
     {
         return NULL;
     }
+    //fill
     ans->name = '?';
     ans->num_rows = mat1->num_rows;
     ans->num_cols = mat2->num_cols;
+
+    //adding
     for (size_t i = 0; i < count; i++)
     {
         ans->values[i] = mat1->values[i] + mat2->values[i];
@@ -88,19 +105,23 @@ matrix_sf* add_mats_sf(const matrix_sf *mat1, const matrix_sf *mat2) {
 }
 
 matrix_sf* mult_mats_sf(const matrix_sf *mat1, const matrix_sf *mat2) {
+    //null check
     if(mat1 == NULL || mat2== NULL || mat1->num_cols != mat2->num_rows)
     {
         return NULL;
     }
+    //allocate
     size_t count = (size_t)mat1->num_rows * mat2->num_cols;
     matrix_sf *ans = malloc(sizeof(matrix_sf)+ count * (sizeof(int)));
     if(ans == NULL)
     {
         return NULL;
     }
+    //fill
     ans->name = '?';
     ans->num_rows = mat1->num_rows;
     ans->num_cols = mat2->num_cols;
+    // i =row ,j=col, k = addition in multiplication
     for (unsigned int i = 0; i < mat1->num_rows; i++)
     {
         for (unsigned int j = 0; j < mat2->num_cols; j++)
@@ -118,20 +139,24 @@ matrix_sf* mult_mats_sf(const matrix_sf *mat1, const matrix_sf *mat2) {
 }
 
 matrix_sf* transpose_mat_sf(const matrix_sf *mat) {
+    //null check
     if(mat == NULL)
     {
         return NULL;
     }
+    //alloc
     size_t count = (size_t)mat->num_rows * mat->num_cols;
     matrix_sf *ans = malloc(sizeof(matrix_sf)+ count* sizeof(int));
     if(ans == NULL)
     {
         return NULL;
     }
+    //fill
     ans->name = '?';
     ans->num_rows = mat->num_cols;
     ans->num_cols = mat->num_rows;
 
+    //i =row, j= col, flip j and i
     for (unsigned int i = 0; i < mat->num_rows; i++)
     {
         for (unsigned int j = 0; j < mat->num_cols; j++)
@@ -144,20 +169,24 @@ matrix_sf* transpose_mat_sf(const matrix_sf *mat) {
 }
 
 matrix_sf* create_matrix_sf(char name, const char *expr) {
+    //null check
     if (name == '\0' || expr == NULL)
     {
         return NULL;
     }
+    //pointer to each parse
     const char *p = expr;
     char *end = NULL;
-
+    //row
     long r = strtol(p, &end, 10);
     if (end == p || r <= 0) return NULL;
     p = end;
-
+    //col
     long c = strtol(p, &end, 10);
     if (end == p || c <= 0) return NULL;
     p = end;
+
+    //alloc
     size_t rows = (size_t)r;
     size_t cols = (size_t)c;
     size_t count = rows * cols;
@@ -167,45 +196,53 @@ matrix_sf* create_matrix_sf(char name, const char *expr) {
         return NULL;
     }
 
-
+//fill
     m->name = name;
     m->num_rows = (unsigned int)rows;
     m->num_cols = (unsigned int)cols;
 
+    //matrix
     while (*p && *p != '[') p++;
     if (*p == '[') p++; 
-
+    
     for (size_t i = 0; i < count; i++)
     {
+        //parse each value
         long v =strtol(p,&end,10);
         if(end ==p)
         {
             free(m);
             return NULL;
         }
+        //add value
         m->values[i] = (int)v;
         p =end;
-        
+        //space check
         while (*p && (*p == ' ' || *p == ';' || *p == '\n' || *p == '\t')) p++;
-
     }
     return m;
 }
 
 char* infix2postfix_sf(char *infix) {
+    //null
     if (infix == NULL) return NULL;
-    //stack implementation as array
+
+    //stack
     char stack[256];
     int stack_top = -1;
+
     //allocate mem
     char *result = malloc(strlen(infix) + 1);
     if (result == NULL) return NULL;
     int result_idx = 0;
 
+
     for (int i = 0; infix[i] != '\0'; i++)
     {
         char c = infix[i];
-        if (c == ' ') continue;
+        
+        if (c == ' ') continue; //space check
+
         //letter check
         if (isalpha(c)) 
         {
@@ -225,6 +262,7 @@ char* infix2postfix_sf(char *infix) {
             else {cur_prec =1;}
             while (stack_top >= 0 && stack[stack_top] != '(') 
             {
+                //ordering precedence
                 char top_op = stack[stack_top];
                 int top_prec;
                 
@@ -237,6 +275,7 @@ char* infix2postfix_sf(char *infix) {
                 else
                     break;
 
+                //pop if precendence is higher
                 if (top_op != '\'' && top_prec >= cur_prec) {
                     result[result_idx++] = stack[stack_top--];
                 } 
@@ -245,6 +284,7 @@ char* infix2postfix_sf(char *infix) {
                     break;
                 }
             }
+            //push to stack
             stack[++stack_top] = c;
         }
         //paren open
@@ -257,6 +297,7 @@ char* infix2postfix_sf(char *infix) {
                 result[result_idx++] = stack[stack_top--];
             }
             if (stack_top >= 0) stack_top--;
+            //anything after paren
             while (i + 1 < (int)strlen(infix) && infix[i + 1] == '\'') 
             {
                 result[result_idx++] = '\'';
@@ -264,27 +305,31 @@ char* infix2postfix_sf(char *infix) {
             }
         } 
     }
+    //pop rest
     while (stack_top >= 0) 
     {
         result[result_idx++] = stack[stack_top--];
     }
+    //null for end of string
     result[result_idx] = '\0';
     return result;
 }
 
 matrix_sf* evaluate_expr_sf(char name, char *expr, bst_sf *root) {
+    //null check
     if(expr == NULL || root == NULL){return NULL;}
+
     char *postfix = infix2postfix_sf(expr);
     if (postfix == NULL) return NULL;
 
+    //stack
     matrix_sf *stack[256];
     int stack_top = -1;
     
-    // Track which stack entries are temporary (allocated within this function)
-    // vs. from the BST (should not be freed)
+
+    //which stacks should be freed and shouldnt
     int is_temp[256] = {0};
     
-    //
     for (int i = 0; postfix[i] != '\0'; i++) 
     {
         char c = postfix[i];
@@ -293,12 +338,12 @@ matrix_sf* evaluate_expr_sf(char name, char *expr, bst_sf *root) {
             matrix_sf *mat = find_bst_sf(c, root);
             if (mat != NULL) {
                 stack[++stack_top] = mat;
-                is_temp[stack_top] = 0;  // From BST, don't free
+                is_temp[stack_top] = 0;  // do not free
             }
         }
         else if (c == '\'') 
         {
-            // Unary operator - pop one, transpose, push result
+            // pop ,transpose, push
             if (stack_top < 0) {
                 free(postfix);
                 return NULL;
@@ -309,31 +354,32 @@ matrix_sf* evaluate_expr_sf(char name, char *expr, bst_sf *root) {
             
             matrix_sf *result = transpose_mat_sf(mat);
             
-            // Free the temporary matrix we just popped (if it was temporary)
+            //free if temp
             if (mat_is_temp) {
                 free(mat);
             }
             
+            //poush
             if (result != NULL) {
                 stack[++stack_top] = result;
-                is_temp[stack_top] = 1;  // Result is temporary
+                is_temp[stack_top] = 1;  // temp result
             }
         }
         else if (c == '+' || c == '*') {
-            // Binary operator - pop two, operate, push result
             if (stack_top < 1) {
                 free(postfix);
                 return NULL;
             }
-            
+            //pop1
             matrix_sf *mat2 = stack[stack_top];
             int mat2_is_temp = is_temp[stack_top];
             stack_top--;
-            
+            //pop2
             matrix_sf *mat1 = stack[stack_top];
             int mat1_is_temp = is_temp[stack_top];
             stack_top--;
-            
+
+            //operate
             matrix_sf *result = NULL;
             if (c == '+') {
                 result = add_mats_sf(mat1, mat2);
@@ -341,7 +387,7 @@ matrix_sf* evaluate_expr_sf(char name, char *expr, bst_sf *root) {
                 result = mult_mats_sf(mat1, mat2);
             }
 
-            // Free temporary matrices
+            // free temp matricies
             if (mat1_is_temp) {
                 free(mat1);
             }
@@ -349,23 +395,28 @@ matrix_sf* evaluate_expr_sf(char name, char *expr, bst_sf *root) {
                 free(mat2);
             }
             
+            //push
             if (result != NULL) {
                 stack[++stack_top] = result;
-                is_temp[stack_top] = 1;  // Result is temporary
+                is_temp[stack_top] = 1;  //temp result
             }
         }
     }
+    //final left with one matrix
     matrix_sf *final_result = NULL;
     if (stack_top >= 0) {
         final_result = stack[stack_top];
         final_result->name = name;
     }
     
+    //free temp
     free(postfix);
+
     return final_result;
 }
 
 matrix_sf *execute_script_sf(char *filename) {
+    //null check
     if (filename == NULL) return NULL;
 
     FILE *file = fopen(filename, "r");
@@ -376,9 +427,9 @@ matrix_sf *execute_script_sf(char *filename) {
 
     char *line = NULL;
     size_t line_size = 0;
-    
+    //line check
     while (getline(&line, &line_size, file) != -1) {
-        // Trim trailing newline
+        //remove newline
         size_t len = strlen(line);
         if (len > 0 && line[len - 1] == '\n') {
             line[len - 1] = '\0';
@@ -387,35 +438,35 @@ matrix_sf *execute_script_sf(char *filename) {
         // Skip empty lines
         if (strlen(line) == 0) continue;
         
-        // Find the '=' sign to split name and expression
+        // find '='
         char *eq_pos = strchr(line, '=');
         if (eq_pos == NULL) continue;
         
-        // Extract matrix name (should be single character before '=')
+        // find matrix name and expression
         char name = line[0];
         
-        // Move past '=' and skip whitespace
+        // go past = and spaces
         char *expr_start = eq_pos + 1;
         while (*expr_start == ' ') expr_start++;
         
         matrix_sf *new_matrix = NULL;
         
-        // Check if it's a matrix definition (starts with digit) or expression
+        // check if matrix or defenition
         if (isdigit(*expr_start)) {
-            // It's a matrix definition: "A = 2 3 1 2 3 4 5 6"
+            //matrix
             new_matrix = create_matrix_sf(name, expr_start);
         } else {
-            // It's an expression: "C = A*B + D'"
+            //expression
             new_matrix = evaluate_expr_sf(name, expr_start, root);
         }
         
         if (new_matrix != NULL) {
-            // Insert into BST
+            //insert
             root = insert_bst_sf(new_matrix, root);
             last_matrix = new_matrix;
         }
     }
-    
+    //cleanup
     free(line);
     fclose(file);
     if (last_matrix != NULL) {

@@ -67,12 +67,24 @@ $(BLDD)/%.o: $(SRCD)/%.c
 $(BIND)/$(EXEC): $(ALL_OBJF)
 	$(CC) $(BLDD)/$(EXEC).o -o $@ $(LIBS)
 
-test: 
+test-all:
 	@rm -fr $(TSTD).out
 	@mkdir -p $(TSTD).out
 	@$(BIND)/$(TEST) --full-stats --verbose --json=$(TEST_RESULTS)
 
+test-student:
+	@rm -fr $(TSTD).out
+	@mkdir -p $(TSTD).out
+	@$(BIND)/$(TEST) --filter=student_* --full-stats --verbose
+
+test-normal:
+	@rm -fr $(TSTD).out
+	@mkdir -p $(TSTD).out
+	@$(BIND)/$(TEST) --filter=base_* --full-stats --verbose
+
+test: test-all
+
 clean:
 	rm -fr $(BLDD) $(BIND) $(AUXD)/*.o $(TSTD).out *.out $(TEST_RESULTS)
 
-.PHONY: all clean debug setup test
+.PHONY: all clean debug setup test test-all test-student test-normal
